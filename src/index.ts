@@ -1,2 +1,2 @@
-import init from './demo-1/index';
+import init from './demo-2/index';
 init();

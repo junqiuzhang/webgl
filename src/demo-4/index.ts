@@ -42,9 +42,9 @@ function init() {
   webgl.useProgram(programObject);
 
   const jsArrayData = [
-    -0.5, 0.5, 0.0, 1.0, 0.0, 0.0, 1.0,
-    0.5, 0.5, 0.0, 0.0, 1.0, 0.0, 1.0,
-    0.5, -0.5, 0.0, 0.0, 0.0, 1.0, 1.0,
+    -0.5, +0.5, 0.0, 1.0, 0.0, 0.0, 1.0,
+    +0.5, +0.5, 0.0, 0.0, 1.0, 0.0, 1.0,
+    +0.5, -0.5, 0.0, 0.0, 0.0, 1.0, 1.0,
     -0.5, -0.5, 0.0, 1.0, 1.0, 0.0, 1.0,
   ];
 
@@ -72,7 +72,7 @@ function init() {
   webgl.bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 
   let v3PositionIndex = 0;
-  let inColor = 0;
+  let inColor = 1;
   webgl.bindAttribLocation(programObject, v3PositionIndex, 'v3Position');
   webgl.bindAttribLocation(programObject, inColor, 'inColor');
 

@@ -71,8 +71,8 @@ function init() {
   webgl.bindBuffer(webgl.ARRAY_BUFFER, triangleBuffer);
   webgl.bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 
-  let v3PositionIndex = 0;
-  let inColor = 1;
+  let v3PositionIndex = webgl.getAttribLocation(programObject, 'v3Position');
+  let inColor = webgl.getAttribLocation(programObject, 'inColor');
   webgl.bindAttribLocation(programObject, v3PositionIndex, 'v3Position');
   webgl.bindAttribLocation(programObject, inColor, 'inColor');
 

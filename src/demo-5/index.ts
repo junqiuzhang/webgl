@@ -39,6 +39,7 @@ function init() {
 
   let v3PositionLocation = webgl.getAttribLocation(webglProgram, 'v3Position');
   let inColorLocation = webgl.getAttribLocation(webglProgram, 'inColor');
+  
   webgl.bindAttribLocation(webglProgram, v3PositionLocation, 'v3Position');
   webgl.bindAttribLocation(webglProgram, inColorLocation, 'inColor');
 

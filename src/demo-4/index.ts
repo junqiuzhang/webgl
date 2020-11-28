@@ -1,7 +1,7 @@
 import vsSource from './shader-vs.glsl';
 import fsSource from './shader-fs.glsl';
-import { initCanvas, initWebglProgram } from '../common';
-function init() {
+import { initCanvas, initWebglProgram } from '../utils/index';
+function main() {
   const canvas = initCanvas();
   const webgl = canvas.getContext('webgl');
   const webglProgram = initWebglProgram({ webgl, vsSource, fsSource });
@@ -52,4 +52,4 @@ function init() {
 
   webgl.drawElements(webgl.TRIANGLES, 6, webgl.UNSIGNED_SHORT, 0);
 }
-export default init;
+export default main;

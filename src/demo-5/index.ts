@@ -1,7 +1,9 @@
 import vsSource from './shader-vs.glsl';
 import fsSource from './shader-fs.glsl';
-import { initCanvas, initWebglProgram } from '../common';
-function init() {
+import { initCanvas, initWebglProgram } from '../utils/index';
+import { mat4 } from 'gl-matrix';
+import LeavesImage from '../assets/leaves.jpg';
+function main() {
   const canvas = initCanvas();
   const webgl = canvas.getContext('webgl');
   const webglProgram = initWebglProgram({ webgl, vsSource, fsSource });
@@ -9,46 +11,55 @@ function init() {
   webgl.viewport(0, 0, canvas.clientWidth, canvas.clientHeight);
   webgl.clearColor(0, 0, 0, 1);
   webgl.clear(webgl.COLOR_BUFFER_BIT);
-  // 数据设置
-  const jsArrayData = [
-    -0.5, +0.5, 0.0, 1.0, 0.0, 0.0, 1.0,
-    +0.5, +0.5, 0.0, 0.0, 1.0, 0.0, 1.0,
-    +0.5, -0.5, 0.0, 0.0, 0.0, 1.0, 1.0,
-    -0.5, -0.5, 0.0, 1.0, 1.0, 0.0, 1.0,
-  ];
 
+  const positionArray = [
+    0, 0, 0, 0, 0,
+    400, 0, 0, 1, 0,
+    400, 400, 0, 1, 1,
+    
+    0, 0, 0, 0, 0,
+    400, 400, 0, 1, 1,
+    0, 400, 0, 0, 1
+  ];
   const triangleBuffer = webgl.createBuffer();
   webgl.bindBuffer(webgl.ARRAY_BUFFER, triangleBuffer);
   webgl.bufferData(
     webgl.ARRAY_BUFFER,
-    new Float32Array(jsArrayData),
+    new Float32Array(positionArray),
     webgl.STATIC_DRAW
   );
 
-  const jsIndexArrayData = [
-    0, 1, 2,
-    0, 2, 3
-  ];
-  const indexBuffer = webgl.createBuffer();
-  webgl.bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-  webgl.bufferData(
-    webgl.ELEMENT_ARRAY_BUFFER,
-    new Uint16Array(jsIndexArrayData),
-    webgl.STATIC_DRAW
-  );
+  const texture = webgl.createTexture();
+  const image = new Image();
+  image.src = LeavesImage;
+  image.onload = function() {
+    webgl.bindTexture(webgl.TEXTURE_2D, texture);
+    webgl.texImage2D(webgl.TEXTURE_2D, 0, webgl.RGBA, webgl.RGBA, webgl.UNSIGNED_BYTE, image);
+    webgl.texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_MIN_FILTER, webgl.NEAREST);
+    webgl.texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_MAG_FILTER, webgl.NEAREST);
+    webgl.texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_WRAP_S, webgl.CLAMP_TO_EDGE);
+    webgl.texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_WRAP_T, webgl.CLAMP_TO_EDGE);
+    webgl.bindTexture(webgl.TEXTURE_2D, texture);
 
-  let v3PositionLocation = webgl.getAttribLocation(webglProgram, 'v3Position');
-  let inColorLocation = webgl.getAttribLocation(webglProgram, 'inColor');
+    const u_image = webgl.getUniformLocation(webglProgram, 'u_image');
+    webgl.activeTexture(webgl.TEXTURE0);
+    webgl.bindTexture(webgl.TEXTURE_2D, texture);
+    webgl.uniform1i(u_image, 0);
+
+    const transMat = mat4.create();
+    mat4.ortho(transMat, 0, canvas.clientWidth, canvas.clientHeight, 0, -1, 1);
+    const u_trans_matrix = webgl.getUniformLocation(webglProgram, 'u_trans_matrix');
+    webgl.uniformMatrix4fv(u_trans_matrix, false, transMat);
+
+    const a_position = webgl.getAttribLocation(webglProgram, 'a_position');
+    webgl.enableVertexAttribArray(a_position);
+    webgl.vertexAttribPointer(a_position, 3, webgl.FLOAT, false, 4 * 5, 0);
   
-  webgl.bindAttribLocation(webglProgram, v3PositionLocation, 'v3Position');
-  webgl.bindAttribLocation(webglProgram, inColorLocation, 'inColor');
+    const a_text_position = webgl.getAttribLocation(webglProgram, 'a_text_position');
+    webgl.enableVertexAttribArray(a_text_position);
+    webgl.vertexAttribPointer(a_text_position, 2, webgl.FLOAT, false, 4 * 5, 4 * 3);
 
-  webgl.enableVertexAttribArray(v3PositionLocation);
-  webgl.enableVertexAttribArray(inColorLocation);
-
-  webgl.vertexAttribPointer(v3PositionLocation, 3, webgl.FLOAT, false, 4 * 7, 0);
-  webgl.vertexAttribPointer(inColorLocation, 4, webgl.FLOAT, false, 4 * 7, 4 * 3);
-
-  webgl.drawElements(webgl.TRIANGLES, 6, webgl.UNSIGNED_SHORT, 0);
+    webgl.drawArrays(webgl.TRIANGLES, 0, 6);
+  };
 }
-export default init;
+export default main;

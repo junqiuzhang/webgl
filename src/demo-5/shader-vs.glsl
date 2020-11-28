@@ -1,8 +1,9 @@
-precision lowp float;
-attribute vec3 v3Position;
-attribute vec4 inColor;
-varying vec4 outColor;
+precision mediump float;
+attribute vec3 a_position;
+attribute vec2 a_text_position;
+uniform mat4 u_trans_matrix;
+varying vec2 v_text_position;
 void main() {
-  outColor = inColor;
-  gl_Position = vec4(v3Position, 1.0);
+  v_text_position = a_text_position;
+  gl_Position = u_trans_matrix * vec4(a_position, 1.0);
 }

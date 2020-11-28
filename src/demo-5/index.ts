@@ -29,17 +29,16 @@ function main() {
     webgl.STATIC_DRAW
   );
 
-  const texture = webgl.createTexture();
   const image = new Image();
   image.src = LeavesImage;
   image.onload = function() {
+    const texture = webgl.createTexture();
     webgl.bindTexture(webgl.TEXTURE_2D, texture);
     webgl.texImage2D(webgl.TEXTURE_2D, 0, webgl.RGBA, webgl.RGBA, webgl.UNSIGNED_BYTE, image);
     webgl.texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_MIN_FILTER, webgl.NEAREST);
     webgl.texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_MAG_FILTER, webgl.NEAREST);
     webgl.texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_WRAP_S, webgl.CLAMP_TO_EDGE);
     webgl.texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_WRAP_T, webgl.CLAMP_TO_EDGE);
-    webgl.bindTexture(webgl.TEXTURE_2D, texture);
 
     const u_image = webgl.getUniformLocation(webglProgram, 'u_image');
     webgl.activeTexture(webgl.TEXTURE0);
@@ -47,8 +46,8 @@ function main() {
     webgl.uniform1i(u_image, 0);
 
     const transMat = mat4.create();
-    mat4.ortho(transMat, 0, canvas.clientWidth, canvas.clientHeight, 0, -1, 1);
     const u_trans_matrix = webgl.getUniformLocation(webglProgram, 'u_trans_matrix');
+    mat4.ortho(transMat, 0, canvas.clientWidth, canvas.clientHeight, 0, -1, 1);
     webgl.uniformMatrix4fv(u_trans_matrix, false, transMat);
 
     const a_position = webgl.getAttribLocation(webglProgram, 'a_position');

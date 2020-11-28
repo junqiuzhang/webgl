@@ -7,19 +7,15 @@ function main() {
   const canvas = initCanvas();
   const webgl = canvas.getContext('webgl');
   const webglProgram = initWebglProgram({ webgl, vsSource, fsSource });
-  // 画布设置
-  webgl.viewport(0, 0, canvas.clientWidth, canvas.clientHeight);
-  webgl.clearColor(0, 0, 0, 1);
-  webgl.clear(webgl.COLOR_BUFFER_BIT);
 
   const positionArray = [
     0, 0, 0, 0, 0,
-    400, 0, 0, 1, 0,
-    400, 400, 0, 1, 1,
+    240, 0, 0, 1, 0,
+    240, 180, 0, 1, 1,
     
     0, 0, 0, 0, 0,
-    400, 400, 0, 1, 1,
-    0, 400, 0, 0, 1
+    240, 180, 0, 1, 1,
+    0, 180, 0, 0, 1
   ];
   const triangleBuffer = webgl.createBuffer();
   webgl.bindBuffer(webgl.ARRAY_BUFFER, triangleBuffer);
@@ -45,10 +41,16 @@ function main() {
     webgl.bindTexture(webgl.TEXTURE_2D, texture);
     webgl.uniform1i(u_image, 0);
 
-    const transMat = mat4.create();
-    const u_trans_matrix = webgl.getUniformLocation(webglProgram, 'u_trans_matrix');
-    mat4.ortho(transMat, 0, canvas.clientWidth, canvas.clientHeight, 0, -1, 1);
-    webgl.uniformMatrix4fv(u_trans_matrix, false, transMat);
+    const transPosMat = mat4.create();
+    const u_trans_pos_matrix = webgl.getUniformLocation(webglProgram, 'u_trans_pos_matrix');
+    mat4.ortho(transPosMat, 0, canvas.clientWidth, canvas.clientHeight, 0, -1, 1);
+    webgl.uniformMatrix4fv(u_trans_pos_matrix, false, transPosMat);
+
+    const transColorMat = mat4.create();
+    const u_trans_color_matrix = webgl.getUniformLocation(webglProgram, 'u_trans_color_matrix');
+    mat4.set(transColorMat, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    mat4.rotateX(transColorMat, transColorMat, 1);
+    webgl.uniformMatrix4fv(u_trans_color_matrix, false, transColorMat);
 
     const a_position = webgl.getAttribLocation(webglProgram, 'a_position');
     webgl.enableVertexAttribArray(a_position);
@@ -58,6 +60,9 @@ function main() {
     webgl.enableVertexAttribArray(a_text_position);
     webgl.vertexAttribPointer(a_text_position, 2, webgl.FLOAT, false, 4 * 5, 4 * 3);
 
+    webgl.viewport(0, 0, canvas.clientWidth, canvas.clientHeight);
+    webgl.clearColor(0, 0, 0, 1);
+    webgl.clear(webgl.COLOR_BUFFER_BIT);
     webgl.drawArrays(webgl.TRIANGLES, 0, 6);
   };
 }

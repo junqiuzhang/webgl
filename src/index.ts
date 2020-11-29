@@ -1,2 +1,2 @@
-import main from './demo-5/index';
+import main from './demo-6/index';
 main();

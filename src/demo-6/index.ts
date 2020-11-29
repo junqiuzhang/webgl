@@ -58,7 +58,7 @@ function main() {
   const webglProgram = initWebglProgram({ webgl, vsSource, fsSource });
   webgl.viewport(0, 0, canvas.clientWidth, canvas.clientHeight);
 
-  const positionArray = initParticlesData(100);
+  const positionArray = initParticlesData(300);
   const triangleBuffer = webgl.createBuffer();
   webgl.bindBuffer(webgl.ARRAY_BUFFER, triangleBuffer);
   webgl.bufferData(
@@ -69,7 +69,7 @@ function main() {
 
   const image = new Image();
   image.src = LeavesImage;
-  image.onload = function() {
+  image.onload = function () {
     const texture = webgl.createTexture();
     webgl.bindTexture(webgl.TEXTURE_2D, texture);
     webgl.texImage2D(webgl.TEXTURE_2D, 0, webgl.RGBA, webgl.RGBA, webgl.UNSIGNED_BYTE, image);
@@ -85,7 +85,7 @@ function main() {
 
     const transPosMat = mat4.create();
     const u_trans_pos_matrix = webgl.getUniformLocation(webglProgram, 'u_trans_pos_matrix');
-    mat4.ortho(transPosMat, -1 / 2 / image.width * canvas.clientWidth, 1 / 2 / image.width * canvas.clientWidth, 1 / 2 / image.height * canvas.clientWidth, -1 / 2 / image.height * canvas.clientWidth, -1, 1);
+    mat4.ortho(transPosMat, 0, 1 / image.width * canvas.clientWidth, 1 / image.height * canvas.clientWidth, 0, -1, 1);
     webgl.uniformMatrix4fv(u_trans_pos_matrix, false, transPosMat);
 
     const transTexMat = mat2.create();

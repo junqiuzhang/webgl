@@ -1,7 +1,7 @@
 export function initCanvas(width?: number, height?: number) {
   const canvas: HTMLCanvasElement = document.createElement('canvas');
-  canvas.width = width || 600;
-  canvas.height = height || 600;
+  canvas.width = width || 1000;
+  canvas.height = height || 1000;
   document.body.appendChild(canvas);
   return canvas;
 }

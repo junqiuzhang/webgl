@@ -10,13 +10,11 @@ const push = (arr: number[], x: number) => { arr[arr.length] = x }
 const initParticlesData = (n: number) => {
   const positions: number[] = [];
 
-  // 这种时候求你们别用 forEach 了
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n; j++) {
       const [x0, x1] = [i / n, (i + 1) / n] // 每个粒子的 x 轴左右坐标
       const [y0, y1] = [j / n, (j + 1) / n] // 每个粒子的 y 轴上下坐标
 
-      // positions in (x, y), z = 0
       push(positions, x0);
       push(positions, y0);
       push(positions, x0);
@@ -49,7 +47,6 @@ const initParticlesData = (n: number) => {
     }
   }
 
-  // 着色器内的变量名是单数形式，将复数形式的数组名与其对应起来
   return positions
 }
 function main() {

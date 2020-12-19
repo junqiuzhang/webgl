@@ -1,5 +1,5 @@
 # webGL demo
-项目用于学习webGL
+本项目用于学习webGL
 ## 目录
 1. webGL初始化
 2. webGL顶点缓冲区（绘制单色三角形）
